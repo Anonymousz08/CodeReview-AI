@@ -1,0 +1,562 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Global text selection styling */
+::selection {
+  background: rgba(234, 118, 63, 0.3);
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background: rgba(234, 118, 63, 0.3);
+  color: #ffffff;
+}
+
+html,
+body,
+#root {
+  height: 100vh;
+  width: 100vw;
+  background: #0a0a0a;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  overflow: hidden;
+}
+
+.app-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #0a0a0a 0%, #111111 50%, #0f0f0f 100%);
+}
+
+/* Header */
+.header {
+  background: rgba(18, 18, 18, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(234, 118, 63, 0.1);
+  padding: 1rem 2rem;
+  position: relative;
+}
+
+.header::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #ea763f, transparent);
+  opacity: 0.5;
+}
+
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.app-title {
+  color: #ea763f;
+  font-size: 1.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.title-icon {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 0 8px rgba(234, 118, 63, 0.5));
+}
+
+.header-subtitle {
+  color: #888;
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: rgba(234, 118, 63, 0.1);
+  padding: 1px;
+  margin: 1rem;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Panel Styles */
+.editor-panel,
+.review-panel {
+  background: #141414;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.editor-panel {
+  border-radius: 12px 0 0 12px;
+}
+
+.review-panel {
+  border-radius: 0 12px 12px 0;
+  background: #161616;
+}
+
+.panel-header {
+  padding: 1.25rem 1.5rem;
+  background: rgba(20, 20, 20, 0.8);
+  border-bottom: 1px solid rgba(234, 118, 63, 0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(10px);
+}
+
+.panel-header h2 {
+  color: #e8e8e8;
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.file-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #888;
+  font-size: 0.875rem;
+  font-family: "JetBrains Mono", monospace;
+}
+
+.file-dot {
+  width: 8px;
+  height: 8px;
+  background: #ea763f;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(234, 118, 63, 0.5);
+}
+
+.status-indicator {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-indicator.success {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.status-indicator.idle {
+  background: rgba(156, 163, 175, 0.15);
+  color: #9ca3af;
+  border: 1px solid rgba(156, 163, 175, 0.3);
+}
+
+/* Editor Container - FIXED SCROLLBAR ISSUE */
+.editor-container {
+  flex: 1;
+  background: #0f0f0f;
+  border: 1px solid rgba(234, 118, 63, 0.1);
+  margin: 0 1.5rem;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden; /* Container should not scroll */
+}
+
+.editor-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(234, 118, 63, 0.3),
+    transparent
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Code Editor - SINGLE SCROLLBAR SOLUTION */
+.code-editor {
+  background: #0f0f0f !important;
+  height: 100% !important;
+  width: 100% !important;
+  overflow: auto !important; /* Only the main editor scrolls */
+  position: relative;
+}
+
+/* Remove scrollbars from textarea and pre to avoid duplicates */
+.code-editor textarea,
+.code-editor pre {
+  overflow: visible !important; /* No individual scrollbars */
+  max-height: none !important;
+  height: auto !important;
+  min-height: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.code-editor textarea {
+  outline: none !important;
+  resize: none !important;
+  caret-color: #ea763f !important;
+  background: transparent !important;
+  color: #e8e8e8 !important;
+  border: none !important;
+  font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  padding: 20px !important;
+  margin: 0 !important;
+  white-space: pre !important;
+  word-wrap: normal !important;
+  overflow-wrap: normal !important;
+}
+
+.code-editor pre {
+  background: transparent !important;
+  color: #e8e8e8 !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 20px !important;
+  font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  white-space: pre !important;
+  word-wrap: normal !important;
+  overflow-wrap: normal !important;
+  pointer-events: none !important;
+}
+
+/* ONLY style scrollbars for the main code-editor container */
+.code-editor::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.code-editor::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.code-editor::-webkit-scrollbar-thumb {
+  background: rgba(234, 118, 63, 0.6);
+  border-radius: 4px;
+  border: 1px solid rgba(234, 118, 63, 0.2);
+}
+
+.code-editor::-webkit-scrollbar-thumb:hover {
+  background: rgba(234, 118, 63, 0.8);
+}
+
+.code-editor::-webkit-scrollbar-corner {
+  background: #0f0f0f;
+}
+
+/* Hide scrollbars for textarea and pre elements */
+.code-editor textarea::-webkit-scrollbar,
+.code-editor pre::-webkit-scrollbar {
+  display: none;
+}
+
+.code-editor textarea {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.code-editor pre {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* Text selection styling */
+.code-editor textarea::selection {
+  background: rgba(234, 118, 63, 0.3) !important;
+  color: #ffffff !important;
+}
+
+.code-editor textarea::-moz-selection {
+  background: rgba(234, 118, 63, 0.3) !important;
+  color: #ffffff !important;
+}
+
+.code-editor pre::selection {
+  background: rgba(234, 118, 63, 0.3) !important;
+  color: #ffffff !important;
+}
+
+.code-editor pre::-moz-selection {
+  background: rgba(234, 118, 63, 0.3) !important;
+  color: #ffffff !important;
+}
+
+.code-editor pre *::selection {
+  background: rgba(234, 118, 63, 0.3) !important;
+  color: #ffffff !important;
+}
+
+.code-editor pre *::-moz-selection {
+  background: rgba(234, 118, 63, 0.3) !important;
+  color: #ffffff !important;
+}
+
+/* Editor Footer */
+.editor-footer {
+  padding: 1.25rem 1.5rem;
+  background: rgba(20, 20, 20, 0.6);
+  border-top: 1px solid rgba(234, 118, 63, 0.1);
+}
+
+.review-button {
+  background: linear-gradient(135deg, #ea763f, #d4661f);
+  color: white;
+  border: none;
+  padding: 0.875rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 12px rgba(234, 118, 63, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.review-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.review-button:hover::before {
+  left: 100%;
+}
+
+.review-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(234, 118, 63, 0.4);
+}
+
+.review-button:active {
+  transform: translateY(0);
+}
+
+.review-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.button-icon {
+  font-size: 1rem;
+}
+
+.spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Review Content */
+.review-content {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  background: #161616;
+}
+
+.review-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.review-content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.review-content::-webkit-scrollbar-thumb {
+  background: #ea763f;
+  border-radius: 3px;
+}
+
+.review-content::-webkit-scrollbar-thumb:hover {
+  background: #d4661f;
+}
+
+.placeholder {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #666;
+}
+
+.placeholder-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.placeholder p {
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 300px;
+}
+
+/* Markdown Styles */
+.review-content h1,
+.review-content h2,
+.review-content h3 {
+  color: #ea763f;
+  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+}
+
+.review-content h1:first-child,
+.review-content h2:first-child,
+.review-content h3:first-child {
+  margin-top: 0;
+}
+
+.review-content p {
+  color: #e8e8e8;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.review-content code {
+  background: rgba(234, 118, 63, 0.1);
+  color: #ea763f;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.875rem;
+}
+
+.review-content pre {
+  background: #0f0f0f !important;
+  border: 1px solid rgba(234, 118, 63, 0.2);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+
+.review-content pre code {
+  background: none;
+  color: #e8e8e8;
+  padding: 0;
+}
+
+.review-content ul,
+.review-content ol {
+  color: #e8e8e8;
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.review-content li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.review-content blockquote {
+  border-left: 3px solid #ea763f;
+  margin: 1rem 0;
+  padding-left: 1rem;
+  color: #ccc;
+  font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .main-content {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .editor-panel {
+    border-radius: 12px 12px 0 0;
+  }
+
+  .review-panel {
+    border-radius: 0 0 12px 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 1rem;
+  }
+
+  .app-title {
+    font-size: 1.5rem;
+  }
+
+  .main-content {
+    margin: 0.5rem;
+  }
+
+  .panel-header {
+    padding: 1rem;
+  }
+
+  .editor-container,
+  .review-content {
+    margin: 0 1rem;
+  }
+
+  /* Smaller scrollbars on mobile */
+  .code-editor::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+}
