@@ -25,19 +25,18 @@ function App() {
   }, []);
 
   async function reviewCode() {
-    setIsLoading(true);
-    try {
-     const BackendUrl = import.meta.env.VITE_BACKEND_URL;
-      const response = await axios.post(`${BackendUrl}/ai/get-review`, {
-        code,
-      });
-      });
-      setReview(response.data);
-    } catch (error) {
-      setReview("Error: Could not get code review. Please try again.");
-    }
-    setIsLoading(false);
+  setIsLoading(true);
+  try {
+    const BackendUrl = import.meta.env.VITE_BACKEND_URL;
+    const response = await axios.post(`${BackendUrl}/ai/get-review`, {
+      code,
+    });
+    setReview(response.data);
+  } catch (error) {
+    setReview("Error: Could not get code review. Please try again.");
   }
+  setIsLoading(false);
+}
 
   return (
     <div className="app-container">
