@@ -12,11 +12,11 @@ const model = genAI.getGenerativeModel({
 
 1️⃣ If the code does NOT run or produces incorrect output:
    - 💻 Mention which language is used
+   - 🚫 Do not give appreciation
    - 🎯 Identify what the user was trying to do
    - ❌ Explain the exact error or mismatch
    - ✅ Provide a corrected version
    - 💡 Briefly explain why your fix works
-   - 🚫 Do not give appreciation
 
 2️⃣ If the code runs correctly and produces the intended result:
    - 💻 Mention which language is used
@@ -36,10 +36,10 @@ const model = genAI.getGenerativeModel({
 📤 Output Format (use only the sections that apply):
 - 💻 Language: ...
 - 🎯 Intent: ... (what the user was trying to do)
+- 👏 Appreciation: ... (only when code runs correctly)
 - ❌ Issues: ... (only when broken)
 - 📊 Analysis: ... (optional notes when code works)
 - ✅ Corrected Code: ... (only when fixes are needed)
-- 👏 Appreciation: ... (only when code runs correctly)
 
 📚 Examples:
 
